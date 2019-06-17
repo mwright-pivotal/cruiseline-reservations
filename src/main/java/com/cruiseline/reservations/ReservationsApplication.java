@@ -7,6 +7,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,6 +33,7 @@ public class ReservationsApplication {
 
     @Bean
     CommandLineRunner runner(ReservationRepository reservationRepository) {
+        Log log = LogFactory.getLog(ReservationsApplication.class);
         return args -> {
             // read json and write to db
             ObjectMapper mapper = new ObjectMapper();
@@ -42,11 +46,11 @@ public class ReservationsApplication {
                 List<Reservation> people = Arrays.asList(mapper.readValue(inputStream,Reservation[].class));
                 if(Objects.nonNull(people)){
                     people.forEach(reservation -> {
-                        System.out.println(reservation);
+                        log.debug("person added: " + reservation);
                         reservationRepository.save(reservation);
                     });
                     long recordsCount = reservationRepository.count();
-                    System.out.println("Total records inserted : " + recordsCount);
+                    log.info("Total records inserted : " + recordsCount);
                 }
 
                 reservationRepository.saveAll(people);

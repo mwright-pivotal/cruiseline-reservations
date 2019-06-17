@@ -24,7 +24,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.cruiseline.reservations.controller"))
                 .paths(Predicates.and(ant("/**"),
                         Predicates.not(ant("/error/**")),
                         Predicates.not(ant("/admin.*")),
